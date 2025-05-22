@@ -2,13 +2,8 @@
 using System.Data;
 using System.Windows;
 
-namespace UrNotes
-{
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
-    {
-    }
+namespace UrNotes {
+  public partial class App : Application {
+  }
 
 }
