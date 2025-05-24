@@ -1,15 +1,16 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Timers;
+using System.Text.Json;
 using UrNotes.Model;
+using UrNotes.Services;
 
 namespace UrNotes.ViewModel {
   class NotesViewModel {
-    private readonly string NotesDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "notes");
-
+    private NotesFileManager dataFolder = new NotesFileManager();
     public ObservableCollection<Note> Notes { get; } = new ObservableCollection<Note>();
 
+    public NotesViewModel() {
+      
+    }
   }
 }
