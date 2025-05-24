@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.IO;
-using System.Text.Json;
 using UrNotes.Models;
 using UrNotes.Models.DTOs;
 using UrNotes.Services;
