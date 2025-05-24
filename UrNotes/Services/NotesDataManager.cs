@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text.Json;
-using UrNotes.Model;
+using UrNotes.Models;
+using UrNotes.Models.DTOs;
 
 namespace UrNotes.Services {
   public class NotesDataManager {
@@ -14,11 +15,11 @@ namespace UrNotes.Services {
       if (!NotesDirectory.Exists) {
         NotesDirectory.Create();
       }
-      readDirectory();
+      readDirectoryJSON();
     }
 
     //Searches for data.json and assigns it
-    public void readDirectory() {
+    public void readDirectoryJSON() {
       //Get files from NotesDirectory
       FileInfo[] files = NotesDirectory.GetFiles();
 
@@ -31,9 +32,8 @@ namespace UrNotes.Services {
       }
     }
 
-    //Used to load the JSON data, returning a List of Notes
-    public List<Note> loadNotesData() {
-      //If jsonData is null; or file doesn't exist; throw exception.
+    //Used to load the JSON data, returning a List of NoteDTOs
+    public List<NoteDTO> loadNotesData() {
       if (jsonData == null || !jsonData.Exists) {
         throw new FileNotFoundException("The data.json file was not found in " + dataDirectory);
       }
@@ -42,22 +42,29 @@ namespace UrNotes.Services {
       string jsonString = File.ReadAllText(jsonData.FullName);
 
       //Deserialize into a Note List.
-      var noteList = JsonSerializer.Deserialize<List<Note>>(jsonString);
+      var noteList = JsonSerializer.Deserialize<List<NoteDTO>>(jsonString);
 
       //If noteList is NOT null, return it; else, return a new empty Note List.
-      return noteList ?? new List<Note>();
+      return noteList ?? new List<NoteDTO>();
 
     }
 
     //Used to serialize the JSON data
     public void saveNotesData(IEnumerable<Note> notes) {
-      //Create the data.json file path
       string filePath = Path.Combine(dataDirectory, "data.json");
 
-      //Serialize notes to JSON
-      string jsonString = JsonSerializer.Serialize(notes.ToList(), new JsonSerializerOptions { WriteIndented = true });
+      //Convert the notes list to a list of DTOs
+      var noteDTOs = notes.Select(note => new NoteDTO {
+        ID = note.ID,
+        Name = note.Name,
+        Html = note.Html,
+        IsPinned = note.IsPinned,
+        CreatedAt = note.CreatedAt,
+        LastModified = note.LastModified
+      }).ToList();
 
-      //Write to file
+      //Serialize notes to JSON
+      string jsonString = JsonSerializer.Serialize(noteDTOs.ToList(), new JsonSerializerOptions { WriteIndented = true });
       File.WriteAllText(filePath, jsonString);
 
       //Update jsonData

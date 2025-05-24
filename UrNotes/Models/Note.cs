@@ -1,4 +1,4 @@
-﻿namespace UrNotes.Model {
+﻿namespace UrNotes.Models {
   public class Note {
     public Guid ID { get; }
 
@@ -9,6 +9,7 @@
     public DateTime CreatedAt { get; }
     public DateTime LastModified { get; private set; }
 
+    //CreateNote Constructor
     public Note(Guid ID, string name) {
       this.ID = ID;
 
@@ -22,6 +23,20 @@
       this.name = name;
       CreatedAt = DateTime.Now;
       LastModified = DateTime.Now;
+    }
+
+    //Serializing Constructor
+    public Note(Guid id, string name, string html, bool isPinned, DateTime createdAt, DateTime lastModified) {
+      this.ID = id;
+      if (name == null)
+        throw new ArgumentNullException("The provided Note name is NULL");
+      if (name == String.Empty)
+        name = "Untitled";
+      this.name = name.Trim();
+      this.html = html;
+      this.isPinned = isPinned;
+      this.CreatedAt = createdAt;
+      this.LastModified = lastModified;
     }
 
     //Properties
