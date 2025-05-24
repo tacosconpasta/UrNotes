@@ -54,14 +54,7 @@ namespace UrNotes.Services {
       string filePath = Path.Combine(dataDirectory, "data.json");
 
       //Convert the notes list to a list of DTOs
-      var noteDTOs = notes.Select(note => new NoteDTO {
-        ID = note.ID,
-        Name = note.Name,
-        Html = note.Html,
-        IsPinned = note.IsPinned,
-        CreatedAt = note.CreatedAt,
-        LastModified = note.LastModified
-      }).ToList();
+      var noteDTOs = notes.Select(note => (NoteDTO.toNoteDTO(note))).ToList();
 
       //Serialize notes to JSON
       string jsonString = JsonSerializer.Serialize(noteDTOs.ToList(), new JsonSerializerOptions { WriteIndented = true });
