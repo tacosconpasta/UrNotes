@@ -1,12 +1,23 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using UrNotes.Models;
 using UrNotes.Models.DTOs;
 using UrNotes.Services;
 
 namespace UrNotes.ViewModel {
-  class NotesViewModel {
+  public class NotesViewModel {
     private NotesDataManager dataFolder = new NotesDataManager();
     public ObservableCollection<Note> Notes { get; } = new ObservableCollection<Note>();
+
+    private Note? selectedNote;
+    public Note? SelectedNote {
+      get => selectedNote;
+      set {
+        selectedNote = value;
+        OnPropertyChanged();
+      }
+    }
 
     public NotesViewModel() {
       loadNotes();
@@ -23,6 +34,11 @@ namespace UrNotes.ViewModel {
         Note note = NoteDTO.toNote(dataNote);
         Notes.Add(note);
       }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
   }
 }
