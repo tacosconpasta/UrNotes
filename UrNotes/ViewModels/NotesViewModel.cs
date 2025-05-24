@@ -6,7 +6,7 @@ using UrNotes.Services;
 
 namespace UrNotes.ViewModel {
   class NotesViewModel {
-    private NotesFileManager dataFolder = new NotesFileManager();
+    private NotesDataManager dataFolder = new NotesDataManager();
     public ObservableCollection<Note> Notes { get; } = new ObservableCollection<Note>();
 
     public NotesViewModel() {
