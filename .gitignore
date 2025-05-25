@@ -5,6 +5,7 @@
 
 #Ignore local data
 /UrNotes/data/
+
 # dotenv files
 .env
 
