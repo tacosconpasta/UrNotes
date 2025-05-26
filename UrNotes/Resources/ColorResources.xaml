@@ -1,0 +1,124 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Primary Color Palette -->
+
+    <!-- Whites/Light Grays -->
+    <Color x:Key="Primary900Color">#FFFFFF</Color>
+    <Color x:Key="Primary850Color">#FCFCFD</Color>
+    <Color x:Key="Primary800Color">#F1F2F3</Color>
+
+    <!-- Light Grays -->
+    <Color x:Key="Primary750Color">#B3C4D8</Color>
+    <Color x:Key="Primary700Color">#8DA2BD</Color>
+    <Color x:Key="Primary600Color">#6983A3</Color>
+
+    <!-- Medium Blues -->
+    <Color x:Key="Primary550Color">#4F6F96</Color>
+    <Color x:Key="Primary500Color">#395980</Color>
+    <Color x:Key="Primary400Color">#234168</Color>
+
+    <!-- Dark Blues -->
+    <Color x:Key="Primary300Color">#1D3758</Color>
+    <Color x:Key="Primary200Color">#142332</Color>
+    <Color x:Key="Primary100Color">#040D15</Color>
+
+    <!-- SolidColorBrush Resources -->
+
+    <!-- Whites/Light Grays -->
+    <SolidColorBrush x:Key="Primary900Brush" Color="{StaticResource Primary900Color}"/>
+    <SolidColorBrush x:Key="Primary850Brush" Color="{StaticResource Primary850Color}"/>
+    <SolidColorBrush x:Key="Primary800Brush" Color="{StaticResource Primary800Color}"/>
+
+    <!-- Light Grays -->
+    <SolidColorBrush x:Key="Primary750Brush" Color="{StaticResource Primary750Color}"/>
+    <SolidColorBrush x:Key="Primary700Brush" Color="{StaticResource Primary700Color}"/>
+    <SolidColorBrush x:Key="Primary600Brush" Color="{StaticResource Primary600Color}"/>
+
+    <!-- Medium Blues -->
+    <SolidColorBrush x:Key="Primary550Brush" Color="{StaticResource Primary550Color}"/>
+    <SolidColorBrush x:Key="Primary500Brush" Color="{StaticResource Primary500Color}"/>
+    <SolidColorBrush x:Key="Primary400Brush" Color="{StaticResource Primary400Color}"/>
+
+    <!-- Dark Blues -->
+    <SolidColorBrush x:Key="Primary300Brush" Color="{StaticResource Primary300Color}"/>
+    <SolidColorBrush x:Key="Primary200Brush" Color="{StaticResource Primary200Color}"/>
+    <SolidColorBrush x:Key="Primary100Brush" Color="{StaticResource Primary100Color}"/>
+
+    <!-- 80% Opacity Colors -->
+    <Color x:Key="Primary900Color80">#CCFFFFFF</Color>
+    <Color x:Key="Primary850Color80">#CCFCFCFD</Color>
+    <Color x:Key="Primary800Color80">#CCF1F2F3</Color>
+    <Color x:Key="Primary750Color80">#CCB3C4D8</Color>
+    <Color x:Key="Primary700Color80">#CC8DA2BD</Color>
+    <Color x:Key="Primary600Color80">#CC6983A3</Color>
+    <Color x:Key="Primary550Color80">#CC4F6F96</Color>
+    <Color x:Key="Primary500Color80">#CC395980</Color>
+    <Color x:Key="Primary400Color80">#CC234168</Color>
+    <Color x:Key="Primary300Color80">#CC152D4B</Color>
+    <Color x:Key="Primary200Color80">#CC0B2340</Color>
+    <Color x:Key="Primary100Color80">#142332</Color>
+
+    <!-- Special Opacity Colors -->
+    <Color x:Key="Primary800Color40">#66F1F2F3</Color>
+    <Color x:Key="Primary700Color60">#998DA2BD</Color>
+    <Color x:Key="Primary400Color50">#80234168</Color>
+    <Color x:Key="Primary200Color50">#800B2340</Color>
+    <Color x:Key="Primary100Color95">#F2040D16</Color>
+    <Color x:Key="Primary100Color10">#1A040D16</Color>
+
+    <!-- 80% Opacity SolidColorBrush Resources -->
+    <SolidColorBrush x:Key="Primary900Brush80" Color="{StaticResource Primary900Color80}"/>
+    <SolidColorBrush x:Key="Primary850Brush80" Color="{StaticResource Primary850Color80}"/>
+    <SolidColorBrush x:Key="Primary800Brush80" Color="{StaticResource Primary800Color80}"/>
+    <SolidColorBrush x:Key="Primary750Brush80" Color="{StaticResource Primary750Color80}"/>
+    <SolidColorBrush x:Key="Primary700Brush80" Color="{StaticResource Primary700Color80}"/>
+    <SolidColorBrush x:Key="Primary600Brush80" Color="{StaticResource Primary600Color80}"/>
+    <SolidColorBrush x:Key="Primary550Brush80" Color="{StaticResource Primary550Color80}"/>
+    <SolidColorBrush x:Key="Primary500Brush80" Color="{StaticResource Primary500Color80}"/>
+    <SolidColorBrush x:Key="Primary400Brush80" Color="{StaticResource Primary400Color80}"/>
+    <SolidColorBrush x:Key="Primary300Brush80" Color="{StaticResource Primary300Color80}"/>
+    <SolidColorBrush x:Key="Primary200Brush80" Color="{StaticResource Primary200Color80}"/>
+    <SolidColorBrush x:Key="Primary100Brush80" Color="{StaticResource Primary100Color80}"/>
+
+    <!-- Special Opacity SolidColorBrush Resources -->
+    <SolidColorBrush x:Key="Primary800Brush40" Color="{StaticResource Primary800Color40}"/>
+    <SolidColorBrush x:Key="Primary700Brush60" Color="{StaticResource Primary700Color60}"/>
+    <SolidColorBrush x:Key="Primary400Brush50" Color="{StaticResource Primary400Color50}"/>
+    <SolidColorBrush x:Key="Primary200Brush50" Color="{StaticResource Primary200Color50}"/>
+    <SolidColorBrush x:Key="Primary100Brush95" Color="{StaticResource Primary100Color95}"/>
+    <SolidColorBrush x:Key="Primary100Brush10" Color="{StaticResource Primary100Color10}"/>
+
+    <!-- Semantic Color Aliases -->
+
+    <!-- Background Colors -->
+    <SolidColorBrush x:Key="BackgroundPrimaryBrush" Color="{StaticResource Primary900Color}"/>
+    <SolidColorBrush x:Key="BackgroundSecondaryBrush" Color="{StaticResource Primary850Color}"/>
+    <SolidColorBrush x:Key="BackgroundTertiaryBrush" Color="{StaticResource Primary800Color}"/>
+
+    <!-- Text Colors -->
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource Primary100Color}"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource Primary200Color}"/>
+    <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource Primary400Color}"/>
+
+    <!-- Border Colors -->
+    <SolidColorBrush x:Key="BorderLightBrush" Color="{StaticResource Primary750Color}"/>
+    <SolidColorBrush x:Key="BorderMediumBrush" Color="{StaticResource Primary600Color}"/>
+    <SolidColorBrush x:Key="BorderDarkBrush" Color="{StaticResource Primary400Color}"/>
+
+    <!-- Accent Colors -->
+    <SolidColorBrush x:Key="AccentPrimaryBrush" Color="{StaticResource Primary500Color}"/>
+    <SolidColorBrush x:Key="AccentSecondaryBrush" Color="{StaticResource Primary600Color}"/>
+
+    <!-- Window Background Gradient -->
+    <RadialGradientBrush x:Key="WindowBackgroundGradient" 
+                         Center="0.8,1.0" 
+                        RadiusX="1" 
+                        RadiusY="1"
+                        GradientOrigin="0.8,1.0">
+        <GradientStop Color="{StaticResource Primary200Color}" Offset="0"/>
+        <GradientStop Color="{StaticResource Primary100Color}" Offset="1"/>
+
+    </RadialGradientBrush>
+
+</ResourceDictionary>
