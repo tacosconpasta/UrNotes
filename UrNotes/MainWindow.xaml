@@ -6,21 +6,31 @@
         
         xmlns:local="clr-namespace:UrNotes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid Margin="20">
+        Title="MainWindow" Height="450" Width="800" WindowStyle="None" WindowState="Normal" ResizeMode="CanResize">
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome 
+        CaptionHeight="0"
+        ResizeBorderThickness="10" />
+    </WindowChrome.WindowChrome>
+
+    <Grid Background="{StaticResource Primary200Brush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Title -->
-        <TextBlock Grid.Row="0" FontSize="20" Text="Notes" Margin="0,40,0,60" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+        <TextBlock Grid.Row="0" FontSize="20" Text="Notes" Margin="0,40,0,60" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Foreground="{StaticResource Primary900Brush}"/>
         <!-- List of Notes -->
-        <ListBox Grid.Row="1" ItemsSource="{Binding Notes}">
+        <ListBox Grid.Row="1" ItemsSource="{Binding Notes}" Background="Transparent" BorderThickness="0" 
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Name}" FontSize="16" />
+                    <TextBlock Text="{Binding Name}" FontSize="16"
+                               Foreground="{StaticResource Primary900Brush}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
