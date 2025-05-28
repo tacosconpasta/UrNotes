@@ -10,6 +10,9 @@
 
   <ItemGroup>
     <Folder Include="data\notes\" />
+	<Content Include="assets\**\*.*">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</Content>
   </ItemGroup>
 
 </Project>
