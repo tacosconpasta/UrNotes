@@ -35,18 +35,35 @@ namespace UrNotes.Services {
     //Used to load the JSON data, returning a List of NoteDTOs
     public List<NoteDTO> loadNotesData() {
       if (jsonData == null || !jsonData.Exists) {
-        throw new FileNotFoundException("The data.json file was not found in " + dataDirectory);
+        string jsonPath = Path.Combine(dataDirectory, "data.json");
+        jsonData = new FileInfo(jsonPath);
+
+        //If directory doesn't exist; create
+        if (!NotesDirectory.Exists) {
+          NotesDirectory.Create();
+        }
+
+        // Create an empty JSON file with empty array
+        File.WriteAllText(jsonPath, "[]");
+        jsonData = new FileInfo(jsonPath);
       }
+
 
       //Read all text from jsonData file
       string jsonString = File.ReadAllText(jsonData.FullName);
 
-      //Deserialize into a Note List.
-      var noteList = JsonSerializer.Deserialize<List<NoteDTO>>(jsonString);
 
-      //If noteList is NOT null, return it; else, return a new empty Note List.
-      return noteList ?? new List<NoteDTO>();
+      if (!string.IsNullOrEmpty(jsonString)) {
+        //Deserialize into a Note List.
+        var noteList = JsonSerializer.Deserialize<List<NoteDTO>>(jsonString);
 
+        //If not null, return; else, return an empty new list
+        return noteList ?? new List<NoteDTO>();
+
+      } else {
+        return new List<NoteDTO>();
+
+      }
     }
 
     //Used to serialize the JSON data
