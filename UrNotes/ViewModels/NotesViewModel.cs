@@ -36,6 +36,15 @@ namespace UrNotes.ViewModel {
       }
     }
 
+    public void createNote(String name) {
+      Guid guid = Guid.NewGuid();
+      Note newNote = new Note(guid, name);
+      Notes.Add(newNote);
+
+      dataFolder.saveNotesData(Notes);
+      loadNotes();
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 using System.Text.Json;
 using UrNotes.Models;
 using UrNotes.Models.DTOs;
@@ -67,14 +68,26 @@ namespace UrNotes.Services {
     }
 
     //Used to serialize the JSON data
-    public void saveNotesData(IEnumerable<Note> notes) {
-      string filePath = Path.Combine(dataDirectory, "data.json");
+    public void saveNotesData(ObservableCollection<Note> notes) {
+
+      string filePath = (jsonData != null && jsonData.Exists)
+          ? jsonData.FullName
+          : Path.Combine(dataDirectory, "data.json");
+
+      //Ensure directory exists before writing
+      string? directoryPath = Path.GetDirectoryName(filePath);
+
+      //If it doesn't exist, then create the directory
+      if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath)) {
+        Directory.CreateDirectory(directoryPath);
+      }
 
       //Convert the notes list to a list of DTOs
-      var noteDTOs = notes.Select(note => (NoteDTO.toNoteDTO(note))).ToList();
+      List<NoteDTO> noteDTOs = notes.Select(note => NoteDTO.toNoteDTO(note)).ToList();
 
-      //Serialize notes to JSON
-      string jsonString = JsonSerializer.Serialize(noteDTOs.ToList(), new JsonSerializerOptions { WriteIndented = true });
+      //Serialize notes to JSON (remove redundant .ToList() call)
+      string jsonString = JsonSerializer.Serialize(noteDTOs, new JsonSerializerOptions { WriteIndented = true });
+
       File.WriteAllText(filePath, jsonString);
 
       //Update jsonData
