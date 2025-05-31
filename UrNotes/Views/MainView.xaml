@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:UrNotes.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid Background="{StaticResource Primary200Brush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -17,9 +18,49 @@
                HorizontalAlignment="Center" VerticalAlignment="Center"
                Foreground="{StaticResource Primary900Brush}"/>
 
+        <!-- Search Box -->
+        <Border Grid.Row="0" Background="White" CornerRadius="12" 
+        Margin="40,75,0,32"
+        Width="200" HorizontalAlignment="Left"
+        BorderBrush="#E0E0E0" BorderThickness="1">
+            <TextBox Background="Transparent" BorderThickness="0"
+             VerticalAlignment="Center" Margin="16,0"
+             FontSize="14" Foreground="#666">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TextBox">
+                                    <Grid>
+                                        <ScrollViewer x:Name="PART_ContentHost"/>
+                                        <TextBlock Text="Search your notes..." 
+                                           Foreground="#AAA" 
+                                           Margin="2,0" 
+                                           VerticalAlignment="Center"
+                                           IsHitTestVisible="False">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+        </Border>
+
         <!-- List of Notes -->
         <ListBox Grid.Row="1" ItemsSource="{Binding Notes}" Background="Transparent" BorderThickness="0" 
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="ListBox_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" FontSize="16"
