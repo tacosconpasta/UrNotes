@@ -25,7 +25,7 @@ public sealed partial class AutoSpacedButton : UserControl {
     this.InitializeComponent();
   }
 
-  private void Button_Click(object sender, RoutedEventArgs e) {
+  private void AutoSpacedButton_Click(object sender, RoutedEventArgs e) {
     CreateNoteClicked?.Invoke(this, e);
   }
 }

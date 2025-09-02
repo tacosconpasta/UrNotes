@@ -24,6 +24,7 @@ namespace UrNotes.Views {
 
       // Subscribe to note selection events
       LeftPanelMenuComponent.NoteSelected += OnNoteSelected;
+      LeftPanelMenuComponent.NewNoteRequested += (s,e) => LeftPanelMenuComponent_OnNewNoteRequested();
     }
 
     private void OnNoteSelected(object? sender, Note selectedNote) {
@@ -174,6 +175,7 @@ namespace UrNotes.Views {
       }
     }
 
+    //ADD NOTES
     private void AddNewNoteTab() {
       var rtb = new RichEditBox {
         AcceptsReturn = true,
@@ -208,9 +210,16 @@ namespace UrNotes.Views {
       NotesTabView.SelectedItem = newTab;
     }
 
+    //Allows for the "+" on the TabView to add a new note
     private void NotesTabView_AddTabButtonClick(TabView sender, object args) {
       AddNewNoteTab();
     }
+
+    //Allows for the "Create New Note" Button to add a new note
+    private void LeftPanelMenuComponent_OnNewNoteRequested() {
+      AddNewNoteTab();
+    }
+
 
     private void NotesTabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
       // Save the note before closing the tab

@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="10 15" Background="Transparent" BorderThickness="0" Click="Button_Click">
+    <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Padding="10 15" Background="Transparent" BorderThickness="0" Click="AutoSpacedButton_Click">
         <Grid HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

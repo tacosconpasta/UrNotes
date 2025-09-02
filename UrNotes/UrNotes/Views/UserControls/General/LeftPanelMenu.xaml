@@ -27,7 +27,7 @@
             </StackPanel>
         </StackPanel>
 
-        <!-- Notes ListView - takes remaining space -->
+        <!-- Notes ListView -->
         <StackPanel Grid.Row="1" Margin="0 30 0 0" BorderBrush="{ThemeResource ControlElevationBorderBrush}" BorderThickness="0 1 0 0" ScrollViewer.VerticalScrollMode="Enabled">
             <TextBlock FontSize="14" FontWeight="Normal" Text="Notes" Margin="0 30 0 0"></TextBlock>
             <ListView 
@@ -44,7 +44,7 @@
             </ListView>
         </StackPanel>
 
-        <!-- Settings button at bottom -->
+        <!-- Settings button -->
         <Button Grid.Row="2" 
                 ToolTipService.ToolTip="Settings" 
                 Background="Transparent" 

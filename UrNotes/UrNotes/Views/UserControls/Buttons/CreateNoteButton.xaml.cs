@@ -22,8 +22,14 @@ namespace UrNotes.Views.UserControls.Buttons {
 
     public CreateNoteButton() {
       this.InitializeComponent();
-      InnerButton.CreateNoteClicked += (s, e) =>
-          CreateNoteClicked?.Invoke(this, e);
+      InnerButton.CreateNoteClicked += (s, e) => {
+        //When the button on AutoSpacedButton.xaml is clicked, it fires its _Click function, which invokes the AutoSpacedButton.xaml.cs 
+        //"CreateNoteClicked" event.
+        //^ up there, by using InnerButton.CreateNoteClicked, we subscribe to it.
+        //We then say, when that event happens (when the InnerButton classes Button is Clicked)
+        //We invoke THIS CLASS' "CreateNoteClicked" event, down here, so that it can be subscribed to... upwards.
+        CreateNoteClicked?.Invoke(this, e);
+      };
     }
   }
 }
