@@ -23,7 +23,6 @@ namespace UrNotes.Views.UserControls.General;
 public sealed partial class LeftPanelMenu : UserControl {
   public event RoutedEventHandler? NewNoteRequested;
   public event EventHandler<Note>? NoteSelected;
-  public event EventHandler? NoteRenamed;
 
   public LeftPanelMenu() {
     this.InitializeComponent();
