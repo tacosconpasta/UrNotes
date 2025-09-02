@@ -47,6 +47,7 @@ namespace UrNotes.ViewModel {
       loadNotes();
     }
 
+    //TODO: Method saves ALL notes, it should just modify/overwrite the contents of the existing one
     public void SaveNote(Note note) {
       // Save all notes to persist changes
       dataFolder.saveNotesData(Notes);
