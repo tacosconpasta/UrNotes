@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="UrNotes.Views.UserControls.Buttons.RouteButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UrNotes.Views.UserControls.Buttons"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Button 
+        BorderThickness="0"
+        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+        Background="Transparent"
+        AutomationProperties.Name="Copy this note's route to clipboard"
+        Content="C:\Users\Raúl\Desktop\Classes 2025\IISemestre\Des.SoftwareIII\Bitácora\Bitácora">
+        <ToolTipService.ToolTip>
+            <ToolTip Content="Copy the current route" />
+        </ToolTipService.ToolTip>
+    </Button>
+</UserControl>

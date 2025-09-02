@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "UrNotes (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "UrNotes (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
