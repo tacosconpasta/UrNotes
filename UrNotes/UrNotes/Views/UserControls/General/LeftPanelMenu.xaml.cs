@@ -46,6 +46,7 @@ public sealed partial class LeftPanelMenu : UserControl {
     }
   }
 
+  //Rename onClick
   private void RenameNoteFlyoutButton_Click(object sender, RoutedEventArgs e) {
     var menuFlyoutItem = sender as MenuFlyoutItem;
     if (menuFlyoutItem?.Tag is not Note note) {
@@ -98,7 +99,7 @@ public sealed partial class LeftPanelMenu : UserControl {
     }
   }
 
-
+  //More Rename functionality
   private void CommitRename(TextBox? textBox) {
     if (textBox == null || textBox.DataContext is not Note note) return;
 
@@ -133,6 +134,17 @@ public sealed partial class LeftPanelMenu : UserControl {
     if (textBlock != null) {
       textBlock.Visibility = Visibility.Visible;
       textBox.Visibility = Visibility.Collapsed;
+    }
+  }
+
+  private void DeleteNoteFlyoutButton_Click(object sender, RoutedEventArgs e) {
+    var menuFlyoutItem = sender as MenuFlyoutItem;
+    if (menuFlyoutItem?.Tag is Note note) {
+      // Access ViewModel through DataContext
+      if (this.DataContext is NotesViewModel vm) {
+        vm.Notes.Remove(note);
+        vm.SaveAllNotes();
+      }
     }
   }
 }

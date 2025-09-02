@@ -43,7 +43,7 @@
                                 <TextBlock.ContextFlyout>
                                     <MenuFlyout>
                                         <MenuFlyoutItem Name="RenameNoteFlyoutButton" Text="Rename" Click="RenameNoteFlyoutButton_Click" Tag="{Binding}"/>
-                                        <MenuFlyoutItem Text="Delete" />
+                                        <MenuFlyoutItem Name="DeleteNoteFlyoutButton" Text="Delete" Click="DeleteNoteFlyoutButton_Click" Tag="{Binding}"/>
                                     </MenuFlyout>
                                 </TextBlock.ContextFlyout>
                             </TextBlock>
@@ -53,7 +53,6 @@
                                      Text="{x:Bind Name, Mode=TwoWay}"
                                      FontSize="14"
                                      BorderThickness="1"
-                                     Background="Red"
                                      Visibility="Collapsed"
                                      LostFocus="NoteTextBox_LostFocus"
                                      KeyDown="NoteTextBox_KeyDown"/>
