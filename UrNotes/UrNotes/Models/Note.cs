@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using UrNotes.Models.DTOs;
 
 namespace UrNotes.Models {
-  public class Note {
+  public class Note : INotifyPropertyChanged {
     public Guid ID { get; }
 
     private string name = "";
@@ -43,11 +45,14 @@ namespace UrNotes.Models {
     }
 
     //Properties
-    public string Name { 
-      set { 
-        name = value; 
+    public string Name {
+      set {
+        name = value;
+        OnPropertyChanged();
         LastModified = DateTime.Now;
-      } get { return name; } }
+      }
+      get { return name; }
+    }
 
     public string Html {
       set {
@@ -62,7 +67,8 @@ namespace UrNotes.Models {
         isPinned = value;
         LastModified = DateTime.Now;
       }
-      get { return isPinned; } }
+      get { return isPinned; }
+    }
 
     public static NoteDTO toNoteDTO(Note note) => new NoteDTO {
       ID = note.ID,
@@ -72,5 +78,11 @@ namespace UrNotes.Models {
       CreatedAt = note.CreatedAt,
       LastModified = note.LastModified
     };
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
   }
-}
+
+  }

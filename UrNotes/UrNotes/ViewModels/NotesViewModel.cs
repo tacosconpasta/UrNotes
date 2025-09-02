@@ -61,6 +61,15 @@ namespace UrNotes.ViewModel {
       dataFolder.saveNotesData(Notes);
     }
 
+    //Renames a Note
+    public void RenameNote(Guid noteToRenameID, string newName) {
+      foreach (Note note in Notes) {
+        if (note.ID == noteToRenameID) {
+          note.Name = newName;
+        }
+      } 
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

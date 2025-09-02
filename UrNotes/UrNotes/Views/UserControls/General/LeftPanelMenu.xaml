@@ -36,11 +36,30 @@
                   ItemsSource="{Binding Notes}"
                   SelectionChanged="NotesListView_SelectionChanged"
                   Margin="0,20,0,20">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:Note">
-                    <TextBlock Text="{x:Bind Name}" FontSize="14"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Note">
+                        <Grid>
+                            <TextBlock x:Name="NoteTextBlock" Text="{x:Bind Name, Mode=OneWay}" FontSize="14">
+                                <TextBlock.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Name="RenameNoteFlyoutButton" Text="Rename" Click="RenameNoteFlyoutButton_Click" Tag="{Binding}"/>
+                                        <MenuFlyoutItem Text="Delete" />
+                                    </MenuFlyout>
+                                </TextBlock.ContextFlyout>
+                            </TextBlock>
+
+                            <!-- Edit mode -->
+                            <TextBox x:Name="NoteTextBox"
+                                     Text="{x:Bind Name, Mode=TwoWay}"
+                                     FontSize="14"
+                                     BorderThickness="1"
+                                     Background="Red"
+                                     Visibility="Collapsed"
+                                     LostFocus="NoteTextBox_LostFocus"
+                                     KeyDown="NoteTextBox_KeyDown"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
         </StackPanel>
 
