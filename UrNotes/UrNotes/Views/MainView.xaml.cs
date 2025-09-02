@@ -106,6 +106,14 @@ namespace UrNotes.Views {
         Tag = note.ID // Store the note ID for identification
       };
 
+      // Subscribe to note name changes
+      note.PropertyChanged += (s, e) => {
+        if (e.PropertyName == nameof(Note.Name)) {
+          // Update tab header automatically
+          newTab.Header = note.Name;
+        }
+      };
+
       Console.WriteLine($"Adding tab to TabView. Current tab count: {NotesTabView.TabItems.Count}");
       NotesTabView.TabItems.Add(newTab);
       NotesTabView.SelectedItem = newTab;
