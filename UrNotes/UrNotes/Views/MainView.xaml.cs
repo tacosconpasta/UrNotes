@@ -49,8 +49,8 @@ namespace UrNotes.Views {
     }
 
     private void CreateNoteTab(Note note) {
-      System.Diagnostics.Debug.WriteLine($"Creating tab for note: {note.Name}");
-      System.Diagnostics.Debug.WriteLine($"Note HTML content: '{note.Html}'");
+      Console.WriteLine($"Creating tab for note: {note.Name}");
+      Console.WriteLine($"Note HTML content: '{note.Html}'");
 
       // Create RichEditBox for rich text editing
       var rtb = new RichEditBox {
@@ -106,10 +106,10 @@ namespace UrNotes.Views {
         Tag = note.ID // Store the note ID for identification
       };
 
-      System.Diagnostics.Debug.WriteLine($"Adding tab to TabView. Current tab count: {NotesTabView.TabItems.Count}");
+      Console.WriteLine($"Adding tab to TabView. Current tab count: {NotesTabView.TabItems.Count}");
       NotesTabView.TabItems.Add(newTab);
       NotesTabView.SelectedItem = newTab;
-      System.Diagnostics.Debug.WriteLine($"Tab added. New tab count: {NotesTabView.TabItems.Count}");
+      Console.WriteLine($"Tab added. New tab count: {NotesTabView.TabItems.Count}");
     }
 
     private void DebouncedSave(Note note, RichEditBox rtb) {
@@ -133,10 +133,10 @@ namespace UrNotes.Views {
           string content;
           rtb.Document.GetText(Microsoft.UI.Text.TextGetOptions.FormatRtf, out content);
           note.Html = content;
-          System.Diagnostics.Debug.WriteLine($"Auto-saving note: {note.Name}");
+          Console.WriteLine($"Auto-saving note: {note.Name}");
           SaveNote(note);
         } catch (Exception ex) {
-          System.Diagnostics.Debug.WriteLine($"Error during auto-save: {ex.Message}");
+          Console.WriteLine($"Error during auto-save: {ex.Message}");
         }
       };
 
@@ -145,7 +145,7 @@ namespace UrNotes.Views {
     }
 
     private void SaveNote(Note note) {
-      System.Diagnostics.Debug.WriteLine($"Saving note: {note.Name}");
+      Console.WriteLine($"Saving note: {note.Name}");
       ViewModel.SaveNote(note);
     }
 
@@ -219,7 +219,6 @@ namespace UrNotes.Views {
     private void LeftPanelMenuComponent_OnNewNoteRequested() {
       AddNewNoteTab();
     }
-
 
     private void NotesTabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
       // Save the note before closing the tab
