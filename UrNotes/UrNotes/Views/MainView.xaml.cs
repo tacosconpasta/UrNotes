@@ -31,17 +31,13 @@ namespace UrNotes.Views {
     }
 
     private void OnNoteSelected(object? sender, Note selectedNote) {
-      System.Diagnostics.Debug.WriteLine($"OnNoteSelected called with note: {selectedNote.Name}");
-
       // Check if note is already open in a tab
       var existingTab = FindTabForNote(selectedNote);
       if (existingTab != null) {
-        System.Diagnostics.Debug.WriteLine("Found existing tab, switching to it");
         NotesTabView.SelectedItem = existingTab;
         return;
       }
 
-      System.Diagnostics.Debug.WriteLine("Creating new tab for note");
       // Create new tab for the note
       CreateNoteTab(selectedNote);
     }
@@ -53,7 +49,6 @@ namespace UrNotes.Views {
 
     private void CreateNoteTab(Note note) {
       Console.WriteLine($"Creating tab for note: {note.Name}");
-      Console.WriteLine($"Note HTML content: '{note.Html}'");
 
       // Create RichEditBox for rich text editing
       var rtb = new RichEditBox {
@@ -117,10 +112,8 @@ namespace UrNotes.Views {
         }
       };
 
-      Console.WriteLine($"Adding tab to TabView. Current tab count: {NotesTabView.TabItems.Count}");
       NotesTabView.TabItems.Add(newTab);
       NotesTabView.SelectedItem = newTab;
-      Console.WriteLine($"Tab added. New tab count: {NotesTabView.TabItems.Count}");
     }
 
     private void DebouncedSave(Note note, RichEditBox rtb) {
