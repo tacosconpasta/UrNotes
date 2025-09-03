@@ -24,6 +24,9 @@ namespace UrNotes.Views {
 
       // Subscribe to note selection events
       LeftPanelMenuComponent.NoteSelected += OnNoteSelected;
+
+      //Join the event triggered by the "NewNoteButton" with a function on this class, so that the function triggers
+      //when the event is fired by the click
       LeftPanelMenuComponent.NewNoteRequested += (s,e) => LeftPanelMenuComponent_OnNewNoteRequested();
     }
 
