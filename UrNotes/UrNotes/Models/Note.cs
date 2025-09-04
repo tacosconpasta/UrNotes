@@ -15,17 +15,21 @@ namespace UrNotes.Models {
     public DateTime LastModified { get; private set; }
 
     //CreateNote Constructor
-    public Note(Guid ID, string name) {
+    public Note(Guid ID, string name, string html) {
       this.ID = ID;
 
       if (name == null)
         throw new ArgumentNullException("The provided Note name is NULL");
+
+      if (string.IsNullOrEmpty(html)) 
+        throw new ArgumentNullException("The provided Note content (html/rtf) is NULL");
 
       if (name == String.Empty)
         name = "Untitled";
 
       name = name.Trim();
       this.name = name;
+      this.html = html;
       CreatedAt = DateTime.Now;
       LastModified = DateTime.Now;
     }
