@@ -13,6 +13,7 @@ using UrNotes.Views.UserControls.General;
 namespace UrNotes.Views {
   public sealed partial class MainView : UserControl {
     private NotesViewModel ViewModel = new NotesViewModel();
+    private Dictionary<Guid, Note> UnsavedTabs = new Dictionary<Guid, Note>();
     private int tabCounter = 1;
 
     // Dictionary to store save timers for each note
@@ -39,7 +40,7 @@ namespace UrNotes.Views {
       }
 
       // Create new tab for the note
-      CreateNoteTab(selectedNote);
+      OpenExistingNoteTab(selectedNote);
     }
 
     private TabViewItem FindTabForNote(Note note) {
@@ -47,10 +48,11 @@ namespace UrNotes.Views {
           .FirstOrDefault(tab => tab.Tag?.Equals(note.ID) == true);
     }
 
-    private void CreateNoteTab(Note note) {
+    //Opens an existing note
+    private void OpenExistingNoteTab(Note note) {
       Console.WriteLine($"Creating tab for note: {note.Name}");
 
-      // Create RichEditBox for rich text editing
+      //Create RichEditBox for rich text editing
       var rtb = new RichEditBox {
         AcceptsReturn = true,
         IsSpellCheckEnabled = true,
@@ -110,6 +112,71 @@ namespace UrNotes.Views {
           // Update tab header automatically
           newTab.Header = note.Name;
         }
+      };
+
+      NotesTabView.TabItems.Add(newTab);
+      NotesTabView.SelectedItem = newTab;
+    }
+
+    //ADD a NEW NOTE
+    private void AddNewNoteTab() {
+      Guid noteID = Guid.NewGuid();
+      string noteName = $"Tab {tabCounter++}";
+      string defaultText = "Start typing here...";
+
+      //Variable for saving the new Note
+      Note newNote;
+
+      //Make sure ID is not on Notes List
+      while (!ViewModel.existsID(noteID)) {
+        Console.WriteLine("id exists in view model");
+        noteID = Guid.NewGuid();
+        Console.WriteLine("ID exists, generating another one: " + noteID); 
+      }
+
+      //Then, create Note, but don't save yet
+      newNote = new Note(noteID, noteName, defaultText);
+      Console.WriteLine("New Note created, but not added to anything yet");
+
+      //Add it to the unsavedTabsList
+      if (newNote != null) {
+        Console.WriteLine("new note is being added to unsavedtabs dictionary");
+        UnsavedTabs.Add(newNote.ID, newNote);
+      } else {
+        //return so app doesn't crash
+        Console.WriteLine("newNote was null, so let's return nothing");
+        return;
+      }
+
+      //TODO: Add verification that, if closed tab Tag is in UnsavedNotes List, trigger popup to save in ViewModel
+      var rtb = new RichEditBox {
+        AcceptsReturn = true,
+        IsSpellCheckEnabled = true,
+        Margin = new Thickness(10),
+        VerticalAlignment = VerticalAlignment.Stretch,
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        BorderThickness = new Thickness(0),
+      };
+
+      var parentGrid = new Grid {
+        VerticalAlignment = VerticalAlignment.Stretch,
+        HorizontalAlignment = HorizontalAlignment.Stretch,
+        Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush
+      };
+
+      var randomGrid = new Grid {
+        Padding = new Thickness(10),
+        Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush,
+        TabIndex = 0
+      };
+
+      parentGrid.Children.Add(randomGrid);
+      parentGrid.Children.Add(rtb);
+
+      var newTab = new TabViewItem {
+        Header = newNote.Name,
+        Content = parentGrid,
+        Tag = newNote.ID,
       };
 
       NotesTabView.TabItems.Add(newTab);
@@ -179,41 +246,6 @@ namespace UrNotes.Views {
       }
     }
 
-    //ADD NOTES
-    private void AddNewNoteTab() {
-      var rtb = new RichEditBox {
-        AcceptsReturn = true,
-        IsSpellCheckEnabled = true,
-        Margin = new Thickness(10),
-        VerticalAlignment = VerticalAlignment.Stretch,
-        HorizontalAlignment = HorizontalAlignment.Stretch,
-        BorderThickness = new Thickness(0),
-      };
-
-      var parentGrid = new Grid {
-        VerticalAlignment = VerticalAlignment.Stretch,
-        HorizontalAlignment = HorizontalAlignment.Stretch,
-        Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush
-      };
-
-      var randomGrid = new Grid {
-        Padding = new Thickness(10),
-        Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush,
-        TabIndex = 0
-      };
-
-      parentGrid.Children.Add(randomGrid);
-      parentGrid.Children.Add(rtb);
-
-      var newTab = new TabViewItem {
-        Header = $"Tab {tabCounter++}",
-        Content = parentGrid
-      };
-
-      NotesTabView.TabItems.Add(newTab);
-      NotesTabView.SelectedItem = newTab;
-    }
-
     //Allows for the "+" on the TabView to add a new note
     private void NotesTabView_AddTabButtonClick(TabView sender, object args) {
       AddNewNoteTab();
@@ -224,29 +256,73 @@ namespace UrNotes.Views {
       AddNewNoteTab();
     }
 
-    private void NotesTabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
-      // Save the note before closing the tab
-      if (args.Item is TabViewItem tab && tab.Tag is Guid noteId) {
-        var note = ViewModel.Notes.FirstOrDefault(n => n.ID == noteId);
-        if (note != null && tab.Content is Grid grid && grid.Children.LastOrDefault() is RichEditBox rtb) {
-          try {
-            string content;
-            rtb.Document.GetText(Microsoft.UI.Text.TextGetOptions.FormatRtf, out content);
-            note.Html = content;
-            SaveNote(note);
-          } catch (Exception ex) {
-            System.Diagnostics.Debug.WriteLine($"Error saving note on tab close: {ex.Message}");
-          }
-        }
+    private async void NotesTabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args) {
+      // Check that the closed item is a tab with a valid note ID
+      if (args.Item is not TabViewItem tab || tab.Tag is not Guid noteId)
+        return;
 
-        // Cancel any pending save timer
-        if (saveTimers.ContainsKey(noteId)) {
-          saveTimers[noteId].Stop();
+      // If the note has unsaved changes
+      if (UnsavedTabs.TryGetValue(noteId, out var note)) {
+        // Create a TextBox to allow renaming the note before saving
+        var nameTextBox = new TextBox {
+          Text = note.Name,
+          Margin = new Thickness(0, 10, 0, 0)
+        };
+
+        // Create the dialog
+        var dialog = new ContentDialog {
+          Title = "Save changes?",
+          Content = new StackPanel {
+            Children =
+                {
+                    new TextBlock { Text = "Do you want to save this note before closing?" },
+                    new TextBlock { Text = "Edit note name:" },
+                    nameTextBox
+                }
+          },
+          PrimaryButtonText = "Save",
+          SecondaryButtonText = "Don't Save",
+          CloseButtonText = "Cancel",
+          XamlRoot = this.XamlRoot
+        };
+
+        // Show the dialog and get the result
+        var result = await dialog.ShowAsync();
+
+        switch (result) {
+          case ContentDialogResult.Primary:
+            // Save the note and update its name
+            note.Name = nameTextBox.Text;
+
+            if (tab.Content is Grid grid && grid.Children.LastOrDefault() is RichEditBox rtb) {
+              rtb.Document.GetText(Microsoft.UI.Text.TextGetOptions.FormatRtf, out string content);
+              note.Html = content;
+              ViewModel.addNote(note);
+            }
+
+            UnsavedTabs.Remove(noteId);
+            break;
+
+          case ContentDialogResult.Secondary:
+            // Don't save, just remove from unsaved tabs
+            UnsavedTabs.Remove(noteId);
+            break;
+
+          case ContentDialogResult.None:
+            // Cancel, leave the tab open
+            return;
+        }
+      } else {
+        // Note already saved, stop any pending save timer
+        if (saveTimers.TryGetValue(noteId, out var timer)) {
+          timer.Stop();
           saveTimers.Remove(noteId);
         }
       }
 
-      NotesTabView.TabItems.Remove(args.Item);
+      // Close the tab
+      NotesTabView.TabItems.Remove(tab);
     }
+
   }
 }

@@ -38,10 +38,17 @@ namespace UrNotes.ViewModel {
       }
     }
 
-    public void createNote(String name) {
+    public void createNote(String name, String html) {
       Guid guid = Guid.NewGuid();
-      Note newNote = new Note(guid, name);
+      Note newNote = new Note(guid, name, html);
       Notes.Add(newNote);
+
+      dataFolder.saveNotesData(Notes);
+      loadNotes();
+    }
+
+    public void addNote(Note note) {
+      Notes.Add(note);
 
       dataFolder.saveNotesData(Notes);
       loadNotes();
@@ -68,6 +75,19 @@ namespace UrNotes.ViewModel {
           note.Name = newName;
         }
       } 
+    }
+
+    //If ID already exists in List, returns true
+    public bool existsID(Guid id) {
+      if (id == Guid.Empty) return false;
+      if (Notes.Count == 0) return false;
+
+      foreach (Note note in Notes) {
+        if (note.ID == id) {
+          return true;
+        }
+      }
+      return true;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
