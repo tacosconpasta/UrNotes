@@ -128,7 +128,7 @@ namespace UrNotes.Views {
       Note newNote;
 
       //Make sure ID is not on Notes List
-      while (!ViewModel.existsID(noteID)) {
+      while (ViewModel.existsID(noteID)) {
         Console.WriteLine("id exists in view model");
         noteID = Guid.NewGuid();
         Console.WriteLine("ID exists, generating another one: " + noteID); 
