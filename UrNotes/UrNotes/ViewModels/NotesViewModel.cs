@@ -87,7 +87,9 @@ namespace UrNotes.ViewModel {
           return true;
         }
       }
-      return true;
+
+      //ID wasn't found on notes
+      return false;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
