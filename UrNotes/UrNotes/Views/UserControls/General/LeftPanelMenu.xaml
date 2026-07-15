@@ -20,7 +20,7 @@
 
         <!-- Top section with buttons -->
         <StackPanel Grid.Row="0" Spacing="30">
-            <!-- Hidden for now, it will show the note's route later on -->
+            <!-- Displays the note's route, hidden until the route feature is implemented -->
             <ucButtons:RouteButton Visibility="Collapsed"/>
             <StackPanel Spacing="20">
                 <ucInputs:SearchNotesInput x:Name="SearchNotesInputComponent" />

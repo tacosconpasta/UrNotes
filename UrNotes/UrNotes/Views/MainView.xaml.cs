@@ -1,4 +1,4 @@
-using Microsoft.UI;
+﻿using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UrNotes.Models;
 using UrNotes.ViewModel;
+using UrNotes.Views.UserControls.Buttons;
 using UrNotes.Views.UserControls.General;
 
 namespace UrNotes.Views {
@@ -80,9 +81,13 @@ namespace UrNotes.Views {
         rtb.Document.SetText(Microsoft.UI.Text.TextSetOptions.None, "Start typing your note here...");
       }
 
+      //Status bar below the editor so the user knows when the note is being saved
+      var statusBar = BuildSaveStatusBar(note, rtb);
+      statusBar.ShowSaved();
+
       // Handle text changes with debounced saving
       rtb.TextChanged += (s, e) => {
-        DebouncedSave(note, rtb);
+        DebouncedSave(note, rtb, statusBar);
       };
 
       var parentGrid = new Grid {
@@ -91,14 +96,21 @@ namespace UrNotes.Views {
         Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush
       };
 
+      //Editor on top, status bar on the bottom row
+      parentGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+      parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
       var randomGrid = new Grid {
         Padding = new Thickness(10),
         Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush,
         TabIndex = 0
       };
+      Grid.SetRowSpan(randomGrid, 2);
+      Grid.SetRow(statusBar, 1);
 
       parentGrid.Children.Add(randomGrid);
       parentGrid.Children.Add(rtb);
+      parentGrid.Children.Add(statusBar);
 
       var newTab = new TabViewItem {
         Header = note.Name,
@@ -158,20 +170,41 @@ namespace UrNotes.Views {
         BorderThickness = new Thickness(0),
       };
 
+      //Status bar below the editor; the note starts as not saved until the user saves it
+      var statusBar = BuildSaveStatusBar(newNote, rtb);
+      statusBar.ShowNotSaved();
+
+      //New notes don't auto-save (they aren't on the notes list yet), but once the note
+      //gets its first save, edits start using the auto-save like any other note
+      rtb.TextChanged += (s, e) => {
+        if (UnsavedTabs.ContainsKey(newNote.ID)) {
+          statusBar.ShowNotSaved();
+        } else {
+          DebouncedSave(newNote, rtb, statusBar);
+        }
+      };
+
       var parentGrid = new Grid {
         VerticalAlignment = VerticalAlignment.Stretch,
         HorizontalAlignment = HorizontalAlignment.Stretch,
         Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush
       };
 
+      //Editor on top, status bar on the bottom row
+      parentGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+      parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
       var randomGrid = new Grid {
         Padding = new Thickness(10),
         Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush,
         TabIndex = 0
       };
+      Grid.SetRowSpan(randomGrid, 2);
+      Grid.SetRow(statusBar, 1);
 
       parentGrid.Children.Add(randomGrid);
       parentGrid.Children.Add(rtb);
+      parentGrid.Children.Add(statusBar);
 
       var newTab = new TabViewItem {
         Header = newNote.Name,
@@ -183,12 +216,15 @@ namespace UrNotes.Views {
       NotesTabView.SelectedItem = newTab;
     }
 
-    private void DebouncedSave(Note note, RichEditBox rtb) {
+    private void DebouncedSave(Note note, RichEditBox rtb, SaveStatusBar statusBar) {
       // Cancel existing timer if it exists
       if (saveTimers.ContainsKey(note.ID)) {
         saveTimers[note.ID].Stop();
         saveTimers.Remove(note.ID);
       }
+
+      //Let the user know there are changes on their way to being saved
+      statusBar.ShowSaving();
 
       // Create new timer that will save after 5 seconds of no changes
       var timer = new DispatcherTimer {
@@ -206,8 +242,14 @@ namespace UrNotes.Views {
           note.Html = content;
           Console.WriteLine($"Auto-saving note: {note.Name}");
           SaveNote(note);
+
+          //Changes were persisted, update the status bar
+          statusBar.ShowSaved();
         } catch (Exception ex) {
           Console.WriteLine($"Error during auto-save: {ex.Message}");
+
+          //The save failed, so the note still has unsaved changes
+          statusBar.ShowNotSaved();
         }
       };
 
@@ -232,7 +274,8 @@ namespace UrNotes.Views {
       foreach (var tabObj in NotesTabView.TabItems) {
         if (tabObj is TabViewItem tab && tab.Tag is Guid noteId) {
           var note = ViewModel.Notes.FirstOrDefault(n => n.ID == noteId);
-          if (note != null && tab.Content is Grid grid && grid.Children.LastOrDefault() is RichEditBox rtb) {
+          //Find the editor among the tab's children
+          if (note != null && tab.Content is Grid grid && grid.Children.OfType<RichEditBox>().FirstOrDefault() is RichEditBox rtb) {
             try {
               string content;
               rtb.Document.GetText(Microsoft.UI.Text.TextGetOptions.FormatRtf, out content);
@@ -244,6 +287,34 @@ namespace UrNotes.Views {
           }
         }
       }
+    }
+
+    //Creates the status bar shown below a note's editor and wires its manual save button
+    private SaveStatusBar BuildSaveStatusBar(Note note, RichEditBox rtb) {
+      var statusBar = new SaveStatusBar();
+
+      //Manual save: cancel the pending auto-save so it doesn't save twice, then persist right away
+      statusBar.SaveRequested += (s, e) => {
+        if (saveTimers.TryGetValue(note.ID, out var timer)) {
+          timer.Stop();
+          saveTimers.Remove(note.ID);
+        }
+
+        rtb.Document.GetText(Microsoft.UI.Text.TextGetOptions.FormatRtf, out string content);
+        note.Html = content;
+
+        //If the note was never saved, this is its first save, so it has to be added to the notes list
+        if (UnsavedTabs.ContainsKey(note.ID)) {
+          ViewModel.addNote(note);
+          UnsavedTabs.Remove(note.ID);
+        } else {
+          SaveNote(note);
+        }
+
+        statusBar.ShowSaved();
+      };
+
+      return statusBar;
     }
 
     //Allows for the "+" on the TabView to add a new note
@@ -294,7 +365,8 @@ namespace UrNotes.Views {
             // Save the note and update its name
             note.Name = nameTextBox.Text;
 
-            if (tab.Content is Grid grid && grid.Children.LastOrDefault() is RichEditBox rtb) {
+            //Find the editor among the tab's children
+            if (tab.Content is Grid grid && grid.Children.OfType<RichEditBox>().FirstOrDefault() is RichEditBox rtb) {
               rtb.Document.GetText(Microsoft.UI.Text.TextGetOptions.FormatRtf, out string content);
               note.Html = content;
               ViewModel.addNote(note);
