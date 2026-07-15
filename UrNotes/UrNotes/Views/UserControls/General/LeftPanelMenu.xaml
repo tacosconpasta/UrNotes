@@ -20,9 +20,10 @@
 
         <!-- Top section with buttons -->
         <StackPanel Grid.Row="0" Spacing="30">
-            <ucButtons:RouteButton/>
+            <!-- Hidden for now, it will show the note's route later on -->
+            <ucButtons:RouteButton Visibility="Collapsed"/>
             <StackPanel Spacing="20">
-                <ucInputs:SearchNotesInput />
+                <ucInputs:SearchNotesInput x:Name="SearchNotesInputComponent" />
                 <ucButtons:CreateNoteButton x:Name="CreateNoteButtonComponent"/>
             </StackPanel>
         </StackPanel>
@@ -33,7 +34,7 @@
             <ListView 
                   x:Name="NotesListView" 
                   SelectionMode="Single" 
-                  ItemsSource="{Binding Notes}"
+                  ItemsSource="{Binding FilteredNotes}"
                   SelectionChanged="NotesListView_SelectionChanged"
                   Margin="0,20,0,20">
                 <ListView.ItemTemplate>

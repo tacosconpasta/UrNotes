@@ -8,7 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <TextBox PlaceholderText="Search..." Padding="10" FontSize="13" BorderThickness="0">
-        
+    <TextBox x:Name="SearchTextBox"
+             PlaceholderText="Search..."
+             Padding="10"
+             FontSize="13"
+             BorderThickness="0"
+             TextChanged="SearchTextBox_TextChanged">
+
     </TextBox>
 </UserControl>

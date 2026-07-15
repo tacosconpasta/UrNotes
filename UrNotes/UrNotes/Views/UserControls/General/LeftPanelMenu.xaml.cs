@@ -31,6 +31,13 @@ public sealed partial class LeftPanelMenu : UserControl {
       //We keep propagating upwards, bubbling, until we hit the MainView so we can trigger the NewTab from the tabView in MainView
       NewNoteRequested?.Invoke(this, e);
     };
+
+    //When the search text changes, pass the query to the ViewModel so it filters the notes list
+    SearchNotesInputComponent.SearchTextChanged += (s, query) => {
+      if (this.DataContext is NotesViewModel vm) {
+        vm.SearchQuery = query;
+      }
+    };
   }
 
   private void NotesListView_SelectionChanged(object sender, SelectionChangedEventArgs e) {

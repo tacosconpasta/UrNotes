@@ -20,8 +20,16 @@ namespace UrNotes.Views.UserControls.Inputs;
 
 public sealed partial class SearchNotesInput : UserControl
 {
+    //Fired every time the search text changes, carrying the current query
+    public event EventHandler<string>? SearchTextChanged;
+
     public SearchNotesInput()
     {
         InitializeComponent();
+    }
+
+    private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        SearchTextChanged?.Invoke(this, SearchTextBox.Text);
     }
 }

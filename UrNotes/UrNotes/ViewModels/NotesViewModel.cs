@@ -12,6 +12,20 @@ namespace UrNotes.ViewModel {
     private NotesDataManager dataFolder = new NotesDataManager();
     public ObservableCollection<Note> Notes { get; } = new ObservableCollection<Note>();
 
+    //Notes that the list actually shows, only the ones matching the search query
+    //(Notes can't be filtered directly because saving would only keep the filtered ones)
+    public ObservableCollection<Note> FilteredNotes { get; } = new ObservableCollection<Note>();
+
+    private string searchQuery = "";
+    public string SearchQuery {
+      get => searchQuery;
+      set {
+        searchQuery = value ?? "";
+        applyFilter();
+        OnPropertyChanged();
+      }
+    }
+
     private Note? selectedNote;
     public Note? SelectedNote {
       get => selectedNote;
@@ -22,7 +36,22 @@ namespace UrNotes.ViewModel {
     }
 
     public NotesViewModel() {
+      //Keep the filtered list updated whenever a note is added/removed
+      Notes.CollectionChanged += (s, e) => applyFilter();
+
       loadNotes();
+    }
+
+    //Refills FilteredNotes with the notes whose name matches the search query
+    private void applyFilter() {
+      string query = searchQuery.Trim();
+
+      FilteredNotes.Clear();
+      foreach (Note note in Notes) {
+        if (query == String.Empty || note.Name.Contains(query, StringComparison.OrdinalIgnoreCase)) {
+          FilteredNotes.Add(note);
+        }
+      }
     }
 
     private void loadNotes() {
