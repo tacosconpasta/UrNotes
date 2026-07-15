@@ -86,5 +86,5 @@ UrNotes/
 ---
 
 <p align="center">
-  <sub><strong>Raúl Villarreal</strong> · 2026</sub>
+  <sub><strong>Raúl Villarreal</strong> · <strong>Alexis Barahona</strong> · 2026</sub>
 </p>
