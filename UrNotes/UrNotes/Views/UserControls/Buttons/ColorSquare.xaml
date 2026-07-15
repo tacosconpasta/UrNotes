@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="UrNotes.Views.UserControls.Buttons.ColorSquare"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UrNotes.Views.UserControls.Buttons"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <!-- Square showing the current color; clicking it opens the color wheel on a flyout -->
+    <Button x:Name="ColorButton"
+            Padding="4"
+            Background="Transparent"
+            BorderThickness="0"
+            AutomationProperties.Name="Pick a color">
+        <ToolTipService.ToolTip>
+            <ToolTip Content="Pick a color" />
+        </ToolTipService.ToolTip>
+        <Rectangle x:Name="ColorRect"
+                   Width="16"
+                   Height="16"
+                   RadiusX="3"
+                   RadiusY="3"
+                   Fill="White"
+                   Stroke="{ThemeResource ControlElevationBorderBrush}"
+                   StrokeThickness="1" />
+        <Button.Flyout>
+            <Flyout>
+                <ColorPicker x:Name="Picker"
+                             ColorSpectrumShape="Ring"
+                             IsAlphaEnabled="False"
+                             ColorChanged="Picker_ColorChanged" />
+            </Flyout>
+        </Button.Flyout>
+    </Button>
+</UserControl>

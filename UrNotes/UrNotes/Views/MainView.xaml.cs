@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UrNotes.Models;
 using UrNotes.ViewModel;
@@ -57,7 +58,7 @@ namespace UrNotes.Views {
       var rtb = new RichEditBox {
         AcceptsReturn = true,
         IsSpellCheckEnabled = true,
-        Margin = new Thickness(10),
+        Margin = new Thickness(10, 2, 10, 3),
         VerticalAlignment = VerticalAlignment.Stretch,
         HorizontalAlignment = HorizontalAlignment.Stretch,
         BorderThickness = new Thickness(0)
@@ -85,6 +86,9 @@ namespace UrNotes.Views {
       var statusBar = BuildSaveStatusBar(note, rtb);
       statusBar.ShowSaved();
 
+      //Bar with the text formatting tools shown above the editor
+      var toolBox = BuildToolBox(rtb);
+
       // Handle text changes with debounced saving
       rtb.TextChanged += (s, e) => {
         DebouncedSave(note, rtb, statusBar);
@@ -96,7 +100,8 @@ namespace UrNotes.Views {
         Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush
       };
 
-      //Editor on top, status bar on the bottom row
+      //Tool bar on top, editor in the middle, status bar on the bottom row
+      parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
       parentGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
       parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
@@ -105,10 +110,13 @@ namespace UrNotes.Views {
         Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush,
         TabIndex = 0
       };
-      Grid.SetRowSpan(randomGrid, 2);
-      Grid.SetRow(statusBar, 1);
+      Grid.SetRowSpan(randomGrid, 3);
+      Grid.SetRow(toolBox, 0);
+      Grid.SetRow(rtb, 1);
+      Grid.SetRow(statusBar, 2);
 
       parentGrid.Children.Add(randomGrid);
+      parentGrid.Children.Add(toolBox);
       parentGrid.Children.Add(rtb);
       parentGrid.Children.Add(statusBar);
 
@@ -164,15 +172,18 @@ namespace UrNotes.Views {
       var rtb = new RichEditBox {
         AcceptsReturn = true,
         IsSpellCheckEnabled = true,
-        Margin = new Thickness(10),
+        Margin = new Thickness(10, 2, 10, 3),
         VerticalAlignment = VerticalAlignment.Stretch,
         HorizontalAlignment = HorizontalAlignment.Stretch,
-        BorderThickness = new Thickness(0),
+        BorderThickness = new Thickness(0)
       };
 
       //Status bar below the editor; the note starts as not saved until the user saves it
       var statusBar = BuildSaveStatusBar(newNote, rtb);
       statusBar.ShowNotSaved();
+
+      //Bar with the text formatting tools shown above the editor
+      var toolBox = BuildToolBox(rtb);
 
       //New notes don't auto-save (they aren't on the notes list yet), but once the note
       //gets its first save, edits start using the auto-save like any other note
@@ -190,19 +201,23 @@ namespace UrNotes.Views {
         Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush
       };
 
-      //Editor on top, status bar on the bottom row
+      //Tool bar on top, editor in the middle, status bar on the bottom row
+      parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
       parentGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
       parentGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
       var randomGrid = new Grid {
-        Padding = new Thickness(10),
+        Padding = new Thickness(10, 5, 10, 5),
         Background = Application.Current.Resources["TabViewItemHeaderBackgroundSelected"] as Brush,
         TabIndex = 0
       };
-      Grid.SetRowSpan(randomGrid, 2);
-      Grid.SetRow(statusBar, 1);
+      Grid.SetRowSpan(randomGrid, 3);
+      Grid.SetRow(toolBox, 0);
+      Grid.SetRow(rtb, 1);
+      Grid.SetRow(statusBar, 2);
 
       parentGrid.Children.Add(randomGrid);
+      parentGrid.Children.Add(toolBox);
       parentGrid.Children.Add(rtb);
       parentGrid.Children.Add(statusBar);
 
@@ -315,6 +330,23 @@ namespace UrNotes.Views {
       };
 
       return statusBar;
+    }
+
+    //Creates the tool bar shown above a note's editor and wires its tools to the editor
+    private ToolBox BuildToolBox(RichEditBox rtb) {
+      var toolBox = new ToolBox();
+
+      //Applies the chosen size to the text currently selected on the editor
+      toolBox.FontSizeChanged += (s, newSize) => {
+        rtb.Document.Selection.CharacterFormat.Size = newSize;
+      };
+
+      //Paints the text currently selected on the editor with the picked color
+      toolBox.ColorSelected += (s, color) => {
+        rtb.Document.Selection.CharacterFormat.ForegroundColor = color;
+      };
+
+      return toolBox;
     }
 
     //Allows for the "+" on the TabView to add a new note
